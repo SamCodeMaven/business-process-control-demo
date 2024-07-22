@@ -1,0 +1,36 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: business-process-control
+  datasource:
+    url: jdbc:postgresql://localhost:5432/bpc_user_service
+    username: postgres
+    password: U2010060
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.PostgreSQLDialect
+          format_sql: true
+    open-in-view: false
+  sql:
+    init:
+      mode: always
+  mvc:
+    format:
+      date: yyyy-MM-dd
+      date-time: yyyy-MM-dd HH:mm:ss
+      time: HH:mm:ss
+
+application:
+  security:
+    jwt:
+      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      expiration: 86400000
+      refresh-token:
+        expiration: 604800000
+
+
