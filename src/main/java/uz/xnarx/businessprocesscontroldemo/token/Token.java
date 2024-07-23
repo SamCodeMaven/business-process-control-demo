@@ -1,13 +1,12 @@
 package uz.xnarx.businessprocesscontroldemo.token;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import uz.xnarx.businessprocesscontroldemo.Entity.Users;
 
-@Data
+@Getter
+@Setter
+@ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,7 +27,7 @@ public class Token {
 
   public boolean expired;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne
   @JoinColumn(name = "user_id")
   public Users users;
 }

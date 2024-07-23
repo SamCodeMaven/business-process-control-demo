@@ -3,10 +3,7 @@ package uz.xnarx.businessprocesscontroldemo.Entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import uz.xnarx.businessprocesscontroldemo.token.Token;
@@ -20,6 +17,7 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class Users implements UserDetails {
 
     @Id
@@ -47,8 +45,6 @@ public class Users implements UserDetails {
 
     private Date createdDate;
 
-    @OneToMany(mappedBy = "users")
-    private List<Token> tokens;
 
     private boolean enabled;
 

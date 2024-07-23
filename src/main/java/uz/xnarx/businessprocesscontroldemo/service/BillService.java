@@ -33,6 +33,9 @@ public class BillService {
         Bill bill;
         if (billDto.getId() != null) {
             bill = billRepository.findById(billDto.getId()).orElseThrow(() -> new NotFoundException("Bill not found"));
+            if (!bill.getChecked()){
+                throw new NotFoundException("Bill is not checked");
+            }
             bill.setModifiedDate(LocalDateTime.now());
             bill.setBorrowedAmount(bill.getBorrowedAmount() - billDto.getPaidAmount());
             bill.setPaidAmount(bill.getPaidAmount() + billDto.getPaidAmount());
@@ -52,7 +55,7 @@ public class BillService {
         bill.setTotalPrice(calculateTotalAmount(billDto.getOrderDtos()));
         bill.setBorrowedAmount(calculateTotalAmount(billDto.getOrderDtos()));
         bill.setPaidAmount(0.0);
-
+        bill.setChecked(false);
         billRepository.save(bill);
         saveToHistory(bill, billDto.getPaidAmount());
         return mapBillToDto(bill);
@@ -101,5 +104,12 @@ public class BillService {
         return billRepository.findAllByManagerId(workerId)
                 .stream().map(this::mapBillToDto)
                 .toList();
+    }
+
+    public BillDto approveBill(Long id) {
+        Bill bill = billRepository.findById(id).orElseThrow(() -> new NotFoundException("Bill not found"));
+        bill.setChecked(true);
+        billRepository.save(bill);
+        return mapBillToDto(bill);
     }
 }

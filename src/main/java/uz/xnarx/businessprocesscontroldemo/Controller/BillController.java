@@ -32,6 +32,16 @@ public class BillController {
         return ResponseEntity.ok(billService.saveOrModifyBill(billDto));
     }
 
+    @Operation(summary = "Approve bill by Bill id",
+            responses = @ApiResponse(responseCode = "200",
+                    content = @Content(
+                            array = @ArraySchema(
+                                    schema = @Schema(implementation = BillDto.class)))))
+    @PutMapping(value = ProjectEndpoints.BILL_APPROVE)
+    public ResponseEntity<BillDto> approveBill(@Valid @PathVariable Long id) {
+        return ResponseEntity.ok(billService.approveBill(id));
+    }
+
     @Operation(summary = "get all bills",
             responses = @ApiResponse(responseCode = "200",
                     content = @Content(

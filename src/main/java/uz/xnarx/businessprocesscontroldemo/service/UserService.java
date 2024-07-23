@@ -27,6 +27,7 @@ import uz.xnarx.businessprocesscontroldemo.utils.CommonUtills;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -94,7 +95,7 @@ public class UserService {
         );
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow();
-        var jwtToken = jwtService.generateToken(user);
+        var jwtToken = jwtService.generateToken(Map.of("role", user.getRole().name()),user);
         var refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);

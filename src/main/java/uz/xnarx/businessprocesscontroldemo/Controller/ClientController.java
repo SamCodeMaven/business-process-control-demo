@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import uz.xnarx.businessprocesscontroldemo.constants.ProjectEndpoints;
 import uz.xnarx.businessprocesscontroldemo.payload.ClientDto;
 import uz.xnarx.businessprocesscontroldemo.service.ClientService;
 
@@ -18,7 +19,6 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/client")
 public class ClientController {
 
     private final ClientService clientService;
@@ -29,7 +29,7 @@ public class ClientController {
                     content = @Content(
                             array = @ArraySchema(
                                     schema = @Schema(implementation = ClientDto.class)))))
-    @PostMapping("/saveOrEdit")
+    @PostMapping(value = ProjectEndpoints.CLIENT_REGISTER)
     public ResponseEntity<ClientDto> saveOrUpdateClient(@Valid @RequestBody ClientDto clientDto) {
         clientService.saveOrUpdateClient(clientDto);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -40,7 +40,7 @@ public class ClientController {
                     content = @Content(
                             array = @ArraySchema(
                                     schema = @Schema(implementation = ClientDto.class)))))
-    @GetMapping("/getClients")
+    @GetMapping(value = ProjectEndpoints.CLIENTS)
     public ResponseEntity<List<ClientDto>> getAllClients() {
         List<ClientDto> clients = clientService.getAllClients();
         return ResponseEntity.ok(clients);
@@ -51,13 +51,13 @@ public class ClientController {
                     content = @Content(
                             array = @ArraySchema(
                                     schema = @Schema(implementation = ClientDto.class)))))
-    @GetMapping("/getClients/{manager_id}")
+    @GetMapping(value = ProjectEndpoints.CLIENTS_MANAGER)
     public ResponseEntity<List<ClientDto>> getAllClients(@PathVariable(value = "manager_id") Long manager_id) {
         List<ClientDto> clients = clientService.getAllClientsByManagerId(manager_id);
         return ResponseEntity.ok(clients);
     }
 
-    @GetMapping("/searchClient")
+    @GetMapping(value = ProjectEndpoints.CLIENT_NAME)
     public ResponseEntity<List<ClientDto>> searchClientByName(@RequestParam(value = "name") String name) {
         List<ClientDto> clients = clientService.searchClientByName(name);
         return ResponseEntity.ok(clients);

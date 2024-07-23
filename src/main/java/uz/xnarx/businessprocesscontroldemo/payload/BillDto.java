@@ -24,6 +24,8 @@ public class BillDto {
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 
+    private Boolean checked;
+
 
     private List<OrderDto> orderDtos;
 }

@@ -31,7 +31,10 @@ public class Bill {
     private Double borrowedAmount;
 
     private LocalDateTime createdDate;
+
     private LocalDateTime modifiedDate;
+
+    private Boolean checked;
 
     @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference

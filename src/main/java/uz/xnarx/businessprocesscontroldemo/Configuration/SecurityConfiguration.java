@@ -17,6 +17,7 @@ import static org.springframework.http.HttpMethod.*;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 import static uz.xnarx.businessprocesscontroldemo.Entity.Permission.*;
 import static uz.xnarx.businessprocesscontroldemo.Entity.Role.ADMIN;
+import static uz.xnarx.businessprocesscontroldemo.Entity.Role.MANAGER;
 
 @Configuration
 @EnableWebSecurity
@@ -24,7 +25,7 @@ import static uz.xnarx.businessprocesscontroldemo.Entity.Role.ADMIN;
 @EnableMethodSecurity
 public class SecurityConfiguration {
 
-    private static final String[] WHITE_LIST_URL = {"/api/user/register", "/api/user/authenticate", "/api/user/refresh-token",
+    private static final String[] WHITE_LIST_URL = {"/api/auth/authenticate", "/api/auth/refresh-token",
             "/v2/api-docs",
             "/v3/api-docs",
             "/v3/api-docs/**",
@@ -46,7 +47,9 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(req ->
                         req.requestMatchers(WHITE_LIST_URL)
                                 .permitAll()
-                                .requestMatchers("/api/user/getAll").hasAnyRole(ADMIN.name())
+                                .requestMatchers(GET,"/api/user/getAll","/user/getById/{id}","/api/user/register").hasAnyRole(ADMIN.name())
+                                .requestMatchers(POST,"/api/user/register").hasAnyRole(ADMIN.name())
+                                .requestMatchers(PUT,"/user/enable/{userId}","/user/disable/{userId}").hasAnyRole(ADMIN.name())
                                 .requestMatchers(GET, "/api/v1/management/**").hasAnyAuthority(ADMIN_READ.name(), MANAGER_READ.name())
                                 .requestMatchers(POST, "/api/v1/management/**").hasAnyAuthority(ADMIN_CREATE.name(), MANAGER_CREATE.name())
                                 .requestMatchers(PUT, "/api/v1/management/**").hasAnyAuthority(ADMIN_UPDATE.name(), MANAGER_UPDATE.name())
