@@ -52,15 +52,15 @@ public class BillController {
         return ResponseEntity.ok(billService.getAllBills());
     }
 
-    @Operation(summary = "get bills by workerId",
-            responses = @ApiResponse(responseCode = "200",
-                    content = @Content(
-                            array = @ArraySchema(
-                                    schema = @Schema(implementation = BillDto.class)))))
-    @GetMapping(value = ProjectEndpoints.BILL_WORKER)
-    public ResponseEntity<List<BillDto>> getAllBillsByWorkerId(@Valid @PathVariable Long workerId) {
-        return ResponseEntity.ok(billService.getBillsByWorkerId(workerId));
-    }
+//    @Operation(summary = "get bills by workerId",
+//            responses = @ApiResponse(responseCode = "200",
+//                    content = @Content(
+//                            array = @ArraySchema(
+//                                    schema = @Schema(implementation = BillDto.class)))))
+//    @GetMapping(value = ProjectEndpoints.BILL_WORKER)
+//    public ResponseEntity<List<BillDto>> getAllBillsByWorkerId(@Valid @PathVariable Long workerId) {
+//        return ResponseEntity.ok(billService.getBillsByWorkerId(workerId));
+//    }
 
 
 

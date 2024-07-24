@@ -1,9 +1,11 @@
 package uz.xnarx.businessprocesscontroldemo.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uz.xnarx.businessprocesscontroldemo.Entity.Client;
+import uz.xnarx.businessprocesscontroldemo.Entity.Users;
 import uz.xnarx.businessprocesscontroldemo.exception.NotFoundException;
 import uz.xnarx.businessprocesscontroldemo.payload.ClientDto;
 import uz.xnarx.businessprocesscontroldemo.repository.ClientRepository;
@@ -38,8 +40,13 @@ public class ClientService {
 
     @Transactional
     public List<ClientDto> getAllClients() {
-        List<Client> clients = clientRepository.findAll();
-        return clients.stream().map(this::mapToDto).collect(Collectors.toList());
+        Users users = (Users) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (users.getRole().name().equals("ADMIN")) {
+            List<Client> clients = clientRepository.findAll();
+            return clients.stream().map(this::mapToDto).collect(Collectors.toList());
+        }
+        return clientRepository.findAllByManagerId(users.getId())
+                .stream().map(this::mapToDto).collect(Collectors.toList());
     }
 
     @Transactional
@@ -50,8 +57,17 @@ public class ClientService {
 
     @Transactional
     public List<ClientDto> searchClientByName(String name) {
-        List<Client> clients = clientRepository.findAllByNameContainingIgnoreCase(name);
-        return clients.stream().map(this::mapToDto).collect(Collectors.toList());
+        Users users = (Users) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (users.getRole().name().equals("ADMIN")) {
+            List<Client> clients = clientRepository.findAllByNameContainingIgnoreCase(name);
+            return clients.stream().map(this::mapToDto).collect(Collectors.toList());
+        }
+        List<Client> clients = clientRepository.findAllByManagerId(users.getId());
+        return clients.stream()
+                .filter(client -> client.getName().toLowerCase().contains(name))
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
+
     }
 
     private ClientDto mapToDto(Client client) {

@@ -46,19 +46,19 @@ public class ClientController {
         return ResponseEntity.ok(clients);
     }
 
-    @Operation(summary = "get client details",
-            responses = @ApiResponse(responseCode = "200",
-                    content = @Content(
-                            array = @ArraySchema(
-                                    schema = @Schema(implementation = ClientDto.class)))))
-    @GetMapping(value = ProjectEndpoints.CLIENTS_MANAGER)
-    public ResponseEntity<List<ClientDto>> getAllClients(@PathVariable(value = "manager_id") Long manager_id) {
-        List<ClientDto> clients = clientService.getAllClientsByManagerId(manager_id);
-        return ResponseEntity.ok(clients);
-    }
+//    @Operation(summary = "get client details",
+//            responses = @ApiResponse(responseCode = "200",
+//                    content = @Content(
+//                            array = @ArraySchema(
+//                                    schema = @Schema(implementation = ClientDto.class)))))
+//    @GetMapping(value = ProjectEndpoints.CLIENTS_MANAGER)
+//    public ResponseEntity<List<ClientDto>> getAllClients(@PathVariable(value = "manager_id") Long manager_id) {
+//        List<ClientDto> clients = clientService.getAllClientsByManagerId(manager_id);
+//        return ResponseEntity.ok(clients);
+//    }
 
     @GetMapping(value = ProjectEndpoints.CLIENT_NAME)
-    public ResponseEntity<List<ClientDto>> searchClientByName(@RequestParam(value = "name") String name) {
+    public ResponseEntity<List<ClientDto>> searchClientByName(@RequestHeader@RequestParam(value = "name") String name) {
         List<ClientDto> clients = clientService.searchClientByName(name);
         return ResponseEntity.ok(clients);
     }

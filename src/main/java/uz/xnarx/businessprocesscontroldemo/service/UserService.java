@@ -9,11 +9,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import uz.xnarx.businessprocesscontroldemo.Configuration.JwtService;
 import uz.xnarx.businessprocesscontroldemo.Entity.Users;
+import uz.xnarx.businessprocesscontroldemo.exception.BadRequestException;
 import uz.xnarx.businessprocesscontroldemo.exception.UserAlreadyExistException;
+import uz.xnarx.businessprocesscontroldemo.exception.UserNotFoundException;
 import uz.xnarx.businessprocesscontroldemo.payload.ApiResponse;
 import uz.xnarx.businessprocesscontroldemo.payload.AuthenticationRequest;
 import uz.xnarx.businessprocesscontroldemo.payload.AuthenticationResponse;
@@ -64,6 +67,7 @@ public class UserService {
             user.setPhone(userDto.getPhone());
             user.setCreatedDate(new Date());
             user.setRole(userDto.getRole());
+            user.setEnabled(true);
 
             var savedUser = userRepository.save(user);
             var jwtToken = jwtService.generateToken(user);
@@ -95,6 +99,9 @@ public class UserService {
         );
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow();
+        if (!user.isEnabled()){
+            throw new BadRequestException("User is not enabled");
+        }
         var jwtToken = jwtService.generateToken(Map.of("role", user.getRole().name()),user);
         var refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
@@ -122,6 +129,9 @@ public class UserService {
         if (userEmail != null) {
             var user = this.userRepository.findByEmail(userEmail)
                     .orElseThrow();
+            if (!user.isEnabled()) {
+                throw new BadRequestException("User is not enabled");
+            }
             if (jwtService.isTokenValid(refreshToken, user)) {
                 var accessToken = jwtService.generateToken(user);
                 revokeAllUserTokens(user);
@@ -216,4 +226,13 @@ public class UserService {
         tokenRepository.saveAll(validUserTokens);
     }
 
+    public UserDto getUserByUsername(String username) {
+        Users users=userRepository.findByEmail(username).orElseThrow(() -> new UserNotFoundException("User not found"));
+        return objectMapper.convertValue(users, UserDto.class);
+    }
+
+    public UserDto getUserByToken() {
+        Users users= (Users) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return objectMapper.convertValue(users, UserDto.class);
+    }
 }

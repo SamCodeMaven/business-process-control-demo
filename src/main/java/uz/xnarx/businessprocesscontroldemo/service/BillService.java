@@ -2,6 +2,7 @@ package uz.xnarx.businessprocesscontroldemo.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uz.xnarx.businessprocesscontroldemo.Entity.*;
@@ -94,8 +95,14 @@ public class BillService {
 
 
     public List<BillDto> getAllBills() {
-        return billRepository.findAll().
-                stream().map(this::mapBillToDto)
+        Users users= (Users) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (users.getRole().name().equals("ADMIN")) {
+            return billRepository.findAll().
+                    stream().map(this::mapBillToDto)
+                    .collect(Collectors.toList());
+        }
+        return billRepository.findAllByManagerId(users.getId())
+                .stream().map(this::mapBillToDto)
                 .collect(Collectors.toList());
     }
 

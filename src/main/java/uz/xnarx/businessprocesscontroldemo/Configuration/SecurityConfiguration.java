@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import uz.xnarx.businessprocesscontroldemo.constants.ProjectEndpoints;
 
 import static org.springframework.http.HttpMethod.*;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
@@ -47,13 +48,18 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(req ->
                         req.requestMatchers(WHITE_LIST_URL)
                                 .permitAll()
-                                .requestMatchers(GET,"/api/user/getAll","/user/getById/{id}","/api/user/register").hasAnyRole(ADMIN.name())
-                                .requestMatchers(POST,"/api/user/register").hasAnyRole(ADMIN.name())
-                                .requestMatchers(PUT,"/user/enable/{userId}","/user/disable/{userId}").hasAnyRole(ADMIN.name())
-                                .requestMatchers(GET, "/api/v1/management/**").hasAnyAuthority(ADMIN_READ.name(), MANAGER_READ.name())
-                                .requestMatchers(POST, "/api/v1/management/**").hasAnyAuthority(ADMIN_CREATE.name(), MANAGER_CREATE.name())
-                                .requestMatchers(PUT, "/api/v1/management/**").hasAnyAuthority(ADMIN_UPDATE.name(), MANAGER_UPDATE.name())
-                                .requestMatchers(DELETE, "/api/v1/management/**").hasAnyAuthority(ADMIN_DELETE.name(), MANAGER_DELETE.name())
+                                .requestMatchers(GET, ProjectEndpoints.USERS,ProjectEndpoints.USER_ID).hasAnyRole(ADMIN.name())
+                                .requestMatchers(POST,ProjectEndpoints.USER_REGISTER).hasAnyRole(ADMIN.name())
+                                .requestMatchers(PUT,ProjectEndpoints.USER_ENABLE,ProjectEndpoints.USER_DISABLE,
+                                        ProjectEndpoints.BILL_APPROVE).hasAnyRole(ADMIN.name())
+                                .requestMatchers(GET,ProjectEndpoints.USER_INFO,
+                                        ProjectEndpoints.BILLINGS,
+                                        ProjectEndpoints.PRODUCTS,ProjectEndpoints.PRODUCT_DETAILS,
+                                        ProjectEndpoints.CLIENTS,ProjectEndpoints.CLIENT_NAME).hasAnyRole(ADMIN.name(),MANAGER.name())
+                                .requestMatchers(POST,ProjectEndpoints.USER_TOKEN,ProjectEndpoints.USER_AUTH,
+                                        ProjectEndpoints.BILLING,
+                                        ProjectEndpoints.PRODUCT_SAVE,ProjectEndpoints.PRODUCT_RESTOCK,ProjectEndpoints.PRODUCT_SOLD,
+                                        ProjectEndpoints.CLIENT_REGISTER).hasAnyRole(ADMIN.name(),MANAGER.name())
                                 .anyRequest()
                                 .authenticated()
                 )
