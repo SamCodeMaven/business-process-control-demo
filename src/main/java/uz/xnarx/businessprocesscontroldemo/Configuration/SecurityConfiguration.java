@@ -56,7 +56,7 @@ public class SecurityConfiguration {
                                         ProjectEndpoints.BILLINGS,
                                         ProjectEndpoints.PRODUCTS,ProjectEndpoints.PRODUCT_DETAILS,
                                         ProjectEndpoints.CLIENTS,ProjectEndpoints.CLIENT_NAME).hasAnyRole(ADMIN.name(),MANAGER.name())
-                                .requestMatchers(POST,ProjectEndpoints.USER_TOKEN,ProjectEndpoints.USER_AUTH,
+                                .requestMatchers(POST,ProjectEndpoints.USER_TOKEN,
                                         ProjectEndpoints.BILLING,
                                         ProjectEndpoints.PRODUCT_SAVE,ProjectEndpoints.PRODUCT_RESTOCK,ProjectEndpoints.PRODUCT_SOLD,
                                         ProjectEndpoints.CLIENT_REGISTER).hasAnyRole(ADMIN.name(),MANAGER.name())
