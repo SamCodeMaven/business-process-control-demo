@@ -30,6 +30,7 @@ public class BusinessProcessControlDemoApplication {
                     .phone("+998901001000")
                     .address("Tashkent")
                     .role(ADMIN)
+                    .enabled(true)
                     .build();
             System.out.println("Admin token: " + service.registerUser(admin).getAccessToken());
             System.out.println(admin.toString());
