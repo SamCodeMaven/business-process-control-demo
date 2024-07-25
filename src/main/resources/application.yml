@@ -4,9 +4,10 @@ spring:
   application:
     name: business-process-control
   datasource:
-    url: jdbc:postgresql://localhost:5432/bpc_user_service
-    username: postgres
-    password: U2010060
+    url: jdbc:postgresql://dpg-cqh29laju9rs73eer5t0-a.frankfurt-postgres.render.com/business_process_control
+    username: business_process_control_user
+    password: CkxXLvm8kCOCE4fX8fzKJbc3K17GoSY1
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
