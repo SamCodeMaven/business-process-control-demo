@@ -16,7 +16,6 @@ import uz.xnarx.businessprocesscontroldemo.Configuration.JwtService;
 import uz.xnarx.businessprocesscontroldemo.Entity.Users;
 import uz.xnarx.businessprocesscontroldemo.exception.BadRequestException;
 import uz.xnarx.businessprocesscontroldemo.exception.UserAlreadyExistException;
-import uz.xnarx.businessprocesscontroldemo.exception.UserNotFoundException;
 import uz.xnarx.businessprocesscontroldemo.payload.ApiResponse;
 import uz.xnarx.businessprocesscontroldemo.payload.AuthenticationRequest;
 import uz.xnarx.businessprocesscontroldemo.payload.AuthenticationResponse;
@@ -100,7 +99,7 @@ public class UserService {
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow();
         if (!user.isEnabled()){
-            throw new BadRequestException("User is not enabled");
+            throw new BadRequestException("User is disabled");
         }
         var jwtToken = jwtService.generateToken(Map.of("role", user.getRole().name()),user);
         var refreshToken = jwtService.generateRefreshToken(user);
@@ -224,11 +223,6 @@ public class UserService {
             token.setRevoked(true);
         });
         tokenRepository.saveAll(validUserTokens);
-    }
-
-    public UserDto getUserByUsername(String username) {
-        Users users=userRepository.findByEmail(username).orElseThrow(() -> new UserNotFoundException("User not found"));
-        return objectMapper.convertValue(users, UserDto.class);
     }
 
     public UserDto getUserByToken() {
