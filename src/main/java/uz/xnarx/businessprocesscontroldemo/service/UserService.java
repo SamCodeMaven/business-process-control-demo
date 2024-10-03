@@ -28,6 +28,7 @@ import uz.xnarx.businessprocesscontroldemo.utils.CommonUtills;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -73,6 +74,8 @@ public class UserService {
             var refreshToken = jwtService.generateRefreshToken(user);
             saveUserToken(savedUser, jwtToken);
 
+
+            ArrayList<Integer> arrayList=new ArrayList<>();
 
             userRepository.save(user);
 
