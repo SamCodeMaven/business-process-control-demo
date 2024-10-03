@@ -26,7 +26,7 @@ import static uz.xnarx.businessprocesscontroldemo.Entity.Role.MANAGER;
 @EnableMethodSecurity
 public class SecurityConfiguration {
 
-    private static final String[] WHITE_LIST_URL = {"/api/auth/authenticate", "/api/auth/refresh-token",
+    private static final String[] WHITE_LIST_URL = {ProjectEndpoints.USER_AUTH, ProjectEndpoints.USER_TOKEN,
             "/v2/api-docs",
             "/v3/api-docs",
             "/v3/api-docs/**",
